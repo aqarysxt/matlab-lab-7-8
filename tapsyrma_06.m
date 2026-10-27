@@ -9,8 +9,22 @@ clc;
 format long g;
 
 %% Параллель ортаны іске қосу
-if isempty(ver('parallel')) || ~license('test', 'Distrib_Computing_Toolbox')
-    error('This lab requires Parallel Computing Toolbox.');
+% Toolbox папкасының атауы MATLAB нұсқасына байланысты өзгеруі мүмкін.
+% Сондықтан орнатылған өнімдердің толық тізіміндегі атауын тексереміз.
+installedProducts = ver;
+hasParallelToolbox = any(strcmp({installedProducts.Name}, ...
+    'Parallel Computing Toolbox'));
+if ~hasParallelToolbox
+    error('lab:ParallelToolboxNotFound', ...
+        ['Parallel Computing Toolbox was not found in the installed product list. ' ...
+         'Run ver to check. If it is missing, install it through Add-Ons ' ...
+         'with a MATLAB license that includes this product.']);
+end
+if ~license('test', 'Distrib_Computing_Toolbox')
+    error('lab:ParallelLicenseNotFound', ...
+        ['Parallel Computing Toolbox is installed, but its license was not found. ' ...
+         'Use a MATLAB license that includes this toolbox, or contact ' ...
+         'your university license administrator.']);
 end
 
 pool = gcp('nocreate');
